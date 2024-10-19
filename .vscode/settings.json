@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.inlayHints.enabled": "on",
+    "clangd.enableCodeCompletion": true,
+    "editor.experimentalWhitespaceRendering": "svg",
+    "editor.renderWhitespace": "all",
+    "files.trimTrailingWhitespace": true,
+}
