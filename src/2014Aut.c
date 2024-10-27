@@ -4,8 +4,7 @@
 /*
 2014Autumun
 連結リストのマージソート．
-これメモリリークしてんね（私の実装の問題です）．
-divide, merge, sortはNode *を受け取る実装にするべきだった．
+もうメモリリークしてないはず
 */
 typedef struct Node {
     uint64_t value;
@@ -35,62 +34,59 @@ void add_list(List *l, size_t value) {
     tmp->next->next = NULL;
     tmp->next->value = value;
 }
-List *divide(List *l) {
-    Node *head = l->head;
-    Node *head2 = head->next;
-    List *ret;
-    init_list(&ret);
+Node *divide(Node *head) {
+    Node *head1 = head;
+    Node *head2 = head1->next;
+    Node *ret;
     if (head2 != NULL) {
         head2 = head2->next;
     }
 
     while (head2 != NULL) {
-        head = head->next;
+        head1 = head1->next;
         head2 = head2->next;
         if (head2 != NULL) {
             head2 = head2->next;
         }
     }
-    ret->head = head->next;
-    head->next = NULL;
+    ret = head1->next;
+    head1->next = NULL;
     return ret;
 }
-List *merge(List *a, List *b) {
-    List *p;
-    init_list(&p);
-    Node *head_a = a->head;
-    Node *head_b = b->head;
-    while (head_a != NULL && head_b != NULL) {
-        if (head_a->value <= head_b->value) {
-            add_list(p, head_a->value);
-            head_a = head_a->next;
+Node *merge(Node *a, Node *b) {
+    List l;
+    l.head = NULL;
+    while (a != NULL && b != NULL) {
+        if (a->value <= b->value) {
+            add_list(&l, a->value);
+            a = a->next;
 
         } else {
-            add_list(p, head_b->value);
-            head_b = head_b->next;
+            add_list(&l, b->value);
+            b = b->next;
         }
     }
-    while (head_a != NULL) {
-        add_list(p, head_a->value);
-        head_a = head_a->next;
+    while (a != NULL) {
+        add_list(&l, a->value);
+        a = a->next;
     }
-    while (head_b != NULL) {
-        add_list(p, head_b->value);
-        head_b = head_b->next;
+    while (b != NULL) {
+        add_list(&l, b->value);
+        b = b->next;
     }
     // 途中経過表示用
     // print_list(p);
-    return p;
+    return l.head;
 }
-List *sort(List *l) {
-    if (l->head->next == NULL) {
-        return l;
+Node *sort(Node *head) {
+    if (head->next == NULL) {
+        return head;
     }
-    List *d = divide(l);
+    Node *d = divide(head);
     d = sort(d);
-    l = sort(l);
+    head = sort(head);
 
-    return merge(l, d);
+    return merge(head, d);
 }
 void print_list(List *l) {
     Node *head = l->head;
@@ -103,6 +99,7 @@ void print_list(List *l) {
 int main() {
     List *l, *s;
     init_list(&l);
+    init_list(&s);
     add_list(l, 6);
     add_list(l, 4);
     add_list(l, 3);
@@ -112,6 +109,6 @@ int main() {
     add_list(l, 1);
     add_list(l, 5);
 
-    s = sort(l);
+    s->head = sort(l->head);
     print_list(s);
 }
