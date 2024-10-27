@@ -6,4 +6,7 @@
     "editor.experimentalWhitespaceRendering": "svg",
     "editor.renderWhitespace": "all",
     "files.trimTrailingWhitespace": true,
+    "clangd.arguments": [
+        "-header-insertion=never"
+    ]
 }

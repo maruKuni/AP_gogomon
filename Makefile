@@ -3,6 +3,7 @@ vpath %.exe bin
 
 CC=clang
 CFLAGS:=-g -Wall -Wextra
+# CFLAGS+=-fsanitize=address
 
 .PHONY: all clean
 
